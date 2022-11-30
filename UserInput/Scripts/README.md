@@ -2,5 +2,8 @@
 
 
 #### Problem may encounter
+
 1. The script "QuestionManager.cs" uses Newtonsoft.Json. It may cause a code stripping issue for builds. Solution: Use the Managed Stripping Level option to disable code stripping. However, when the IL2CPP scripting backend is selected, the Disabled option of Managed code stripping is not available. Have to select MONO as backend.
 But MONO only support ARMv7, no ARM64.
+
+2. It is very important to override the default AndroidManifest using the new AndroidManifest.xml for Android build.
