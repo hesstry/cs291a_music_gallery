@@ -57,7 +57,7 @@ public class QuestionManager : MonoBehaviour
 
         HttpClient client = new();
         // Add our Auth token
-        client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
+        client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
         /* Prepare request's data
          * Only generate 1 image for now
          */
