@@ -51,6 +51,7 @@ public class MusicManager : MonoBehaviour
             yield return url;
             aud.clip = url.GetAudioClip(false, true, AudioType.MPEG);
             aud.Play();
+         }
         */
             
             if (File.Exists(MusicPath))
@@ -86,7 +87,7 @@ public class MusicManager : MonoBehaviour
                 print("The music file does not exist! ");
             }
             
-        }
+        
     }
 }
     
