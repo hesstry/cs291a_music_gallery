@@ -40,6 +40,7 @@ public class MusicManager : MonoBehaviour
 
     private IEnumerator LoadAudio()
     {
+        /*
         if (MusicPath.Length != 0)
         {
             // Path for Android
@@ -50,7 +51,7 @@ public class MusicManager : MonoBehaviour
             yield return url;
             aud.clip = url.GetAudioClip(false, true, AudioType.MPEG);
             aud.Play();
-
+        */
             
             if (File.Exists(MusicPath))
             {
