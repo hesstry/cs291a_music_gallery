@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
+//using System.Text;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using TMPro;
-using Unity.VisualScripting;
+
 using UnityEngine;
 using UnityEngine.UI;
 using System.Threading.Tasks;
@@ -13,6 +14,9 @@ using System.IO;
 using static System.Net.Mime.MediaTypeNames;
 using System.Threading;
 using System.Security.Cryptography;
+
+
+
 
 public class QuestionManager : MonoBehaviour
 {
@@ -28,8 +32,11 @@ public class QuestionManager : MonoBehaviour
 
     public GameObject QuestionPanel;
     public GameObject DisplayPanel;
+    //public GameObject AllDoneCanvas;
 
     public UnityEngine.UI.Image imageToDisplay; // Assign in Inspector the UI Image
+
+    //public bool Display=false;
 
     private void Start()
     {
@@ -43,6 +50,7 @@ public class QuestionManager : MonoBehaviour
             QnA.RemoveAt(currentQuestion);
             generateQuestion();
         }
+        
     }
 
     // After the user's input, display the image
@@ -57,7 +65,7 @@ public class QuestionManager : MonoBehaviour
 
         HttpClient client = new();
         // Add our Auth token
-        client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
+        client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
         /* Prepare request's data
          * Only generate 1 image for now
          */
@@ -69,6 +77,7 @@ public class QuestionManager : MonoBehaviour
             response_format = "b64_json"
         };
         var myContent = JsonConvert.SerializeObject(data);
+        //var myContent = Json();
         var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
         var byteContent = new ByteArrayContent(buffer);
         byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -76,10 +85,20 @@ public class QuestionManager : MonoBehaviour
         var response = await client.PostAsync("https://api.openai.com/v1/images/generations", byteContent);
         // Convert response to JSON
         var responseString = await response.Content.ReadAsStringAsync();
-        var dynamicResponseObject = JsonConvert.DeserializeObject<dynamic>(responseString)!;
+
+        print("Got response String");
+        var dynamicResponseObject = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(responseString);
+        
+
         /* b64_json.ToString() contains the base64 encoding of the generated image
          */
-        string imageString = dynamicResponseObject.data[0].b64_json.ToString();
+        print("trying to print imageString...");
+        print(dynamicResponseObject);
+        print(dynamicResponseObject.GetType());
+
+        
+        string imageString = dynamicResponseObject["data"][0]["b64_json"].ToString();
+
         byte[] imageBytes = Convert.FromBase64String(imageString);
 
         //File.WriteAllBytes(savePath, imageBytes);
@@ -87,7 +106,7 @@ public class QuestionManager : MonoBehaviour
 
         int ImageNum = GeneratedImages.Count;
         // store the newly generated image into GeneratedImages
-        GeneratedImages[ImageNum + 1] = imageBytes;
+        GeneratedImages[ImageNum] = imageBytes;
 
         // 1.read the bytes array
         //byte[] bytes = File.ReadAllBytes(ImagePath);
@@ -105,6 +124,9 @@ public class QuestionManager : MonoBehaviour
         // 6.load the sprite used by UI Image
         imageToDisplay.sprite = spriteToUse;
 
+        //AllDoneCanvas.SetActive(true);
+        
+        
     }
 
     void generateQuestion()
@@ -175,4 +197,8 @@ public class QuestionManager : MonoBehaviour
         return buildString;
     }
 
-}  
+} 
+
+
+   
+
